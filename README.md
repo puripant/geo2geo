@@ -1,5 +1,5 @@
 # geo2geo
 
-Click on the map to animate between maps of geographical and geometric shapes. This example is the map of Thailand:
+The animated map of Thailand is at http://puripant.ruchikachorn.com/geo2geo/. Click on the map to morph between maps of geographical and geometric shapes. In this example, the size of a circle is the size of each province.
 
 <img src="geography.png" width="350"><img src="geometry.png" width="350">
