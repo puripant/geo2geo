@@ -1,40 +1,48 @@
 <html>
 <head>
-  <title>Geo2Geo: Geographical & Geometric Maps</title>
+  <title>Geo2Geo: แผนที่เรขาคณิต</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <!-- for Google -->
-  <!-- <meta name="description" content="พิมพ์ชื่อจังหวัดที่เคยไป แล้วแสดงเป็นแผนที่ไปอวดเพื่อนได้เลย! เมืองไทยมีที่เที่ยวมากมาย น้ำตก ทะเล ภูเขา เที่ยวไทย ไม่ไปไม่รู้" />
-  <meta name="keywords" content="map, visualization, choropleth, thailand, travel, แผนที่, ท่องเที่ยว, เที่ยวไทย, จังหวัด" />
-  <meta name="author" content="Boonmee Lab" /> -->
+  <meta name="description" content="คลิกบนแผนที่เพื่อเปลี่ยนรูปทรงของจังหวัดเป็นรูปร่างต่าง ๆ โดยขนาดวงกลมแทนพื้นที่จังหวัด และรูปหกเหลี่ยมมีขนาดคงที่เพื่อแสดงให้เห็นทุกจังหวัดเท่า ๆ กัน" />
+  <meta name="keywords" content="map, visualization, choropleth, thailand, thai, geometric, แผนที่, ไทย, เรขาคณิต" />
+  <meta name="author" content="Boonmee Lab" />
 
   <!-- for Facebook -->
-  <!-- <meta property="og:title" content="มาอวดจังหวัดที่เคยไปกัน!" />
+  <meta property="og:title" content="Geo2Geo: แผนที่เรขาคณิต" />
   <meta property="og:type" content="article" />
-  <meta property="og:image" content="http://puripant.ruchikachorn.com/thai-provinces-visited/thumbnail.jpg" />
-  <meta property="og:url" content="http://puripant.ruchikachorn.com/thai-provinces-visited/" />
-  <meta property="og:description" content="พิมพ์ชื่อจังหวัดที่เคยไป แล้วแสดงเป็นแผนที่ไปอวดเพื่อนได้เลย! เมืองไทยมีที่เที่ยวมากมาย น้ำตก ทะเล ภูเขา เที่ยวไทย ไม่ไปไม่รู้" /> -->
+  <meta property="og:image" content="http://puripant.ruchikachorn.com/geo2geo/thumbnail.jpg" />
+  <meta property="og:url" content="http://puripant.ruchikachorn.com/geo2geo/" />
+  <meta property="og:description" content="คลิกบนแผนที่เพื่อเปลี่ยนรูปทรงของจังหวัดเป็นรูปร่างต่าง ๆ โดยขนาดวงกลมแทนพื้นที่จังหวัด และรูปหกเหลี่ยมมีขนาดคงที่เพื่อแสดงให้เห็นทุกจังหวัดเท่า ๆ กัน" />
 
   <!-- for Twitter -->
-  <!-- <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="มาอวดจังหวัดที่เคยไปกัน!" />
-  <meta name="twitter:description" content="พิมพ์ชื่อจังหวัดที่เคยไป แล้วแสดงเป็นแผนที่ไปอวดเพื่อนได้เลย! เมืองไทยมีที่เที่ยวมากมาย น้ำตก ทะเล ภูเขา เที่ยวไทย ไม่ไปไม่รู้" />
-  <meta name="twitter:image" content="http://puripant.ruchikachorn.com/thai-provinces-visited/thumbnail.jpg" /> -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Geo2Geo: แผนที่เรขาคณิต" />
+  <meta name="twitter:description" content="คลิกบนแผนที่เพื่อเปลี่ยนรูปทรงของจังหวัดเป็นรูปร่างต่าง ๆ โดยขนาดวงกลมแทนพื้นที่จังหวัด และรูปหกเหลี่ยมมีขนาดคงที่เพื่อแสดงให้เห็นทุกจังหวัดเท่า ๆ กัน" />
+  <meta name="twitter:image" content="http://puripant.ruchikachorn.com/geo2geo/thumbnail.jpg" />
 
-	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/semantic.min.css">
+	<!-- <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/semantic.min.css"> -->
 	<link href="main.css" rel="stylesheet">
 </head>
 <body>
+  <div class="desc">
+    คลิกบนแผนที่เพื่อเปลี่ยนรูปทรงของจังหวัดเป็นรูปร่างต่าง ๆ<br />
+    โดยขนาดวงกลมแทนพื้นที่จังหวัด และรูปหกเหลี่ยมมีขนาดคงที่<br />
+    เพื่อแสดงให้เห็นทุกจังหวัดเท่า ๆ กัน<br />
+    (<a href="http://puripant.ruchikachorn.com/thailand-hex-map/">สร้างแผนที่ประเทศไทยหกเหลี่ยมด้วยตัวเองได้ที่นี่</a>)
+  </div>
+
 	<div id="result"></div>
 
-	<div id="credit">
+	<div class="credit">
 		สร้างสรรค์โดย
     <div class="logo boonmeelab"><a href="https://www.facebook.com/BoonmeeLab/"><span></span></a></div>
   </div>
   
 	<script src="http://d3js.org/d3.v4.min.js"></script>
   <script src="https://unpkg.com/topojson@3"></script>
+  <script src="https://unpkg.com/flubber@0.3.0"></script>
 	<script src="main.js"></script>
 </body>
 </html>

@@ -1,15 +1,26 @@
-/* On mouse hover, lighten state color */
-path:hover {
-	fill-opacity: .7;
+body {
+	font: 12px sans-serif;
+}
+a:link, a:visited, a:hover, a:active {
+  color: #E60268;
 }
 
-/* Style for Custom Tooltip */
+#result {
+	width: 400px;
+	margin: 0 auto;
+}
+path {
+  fill: darkgray;
+  fill-opacity: 0.5;
+}
+path:hover {
+	fill-opacity: 1;
+}
 div.tooltip {
  	position: absolute;
 	display: inline-block;
 	text-align: left;
 	line-height: 20px;
-	/*width: 100%;*/
 	height: 30px;
 	padding: 5px 10px;
 	background: white;
@@ -18,17 +29,16 @@ div.tooltip {
 	pointer-events: none;
 }
 
-body {
-	font: 12px sans-serif;
+.desc {
+  text-align: center;
+  width: 400px;
+  margin: 30px auto 0;
 }
 
-#input, #result {
-	width: 400px;
-	margin: 0 auto;
-}
-
-#credit {
-	text-align: center;
+.credit {
+  text-align: center;
+  width: 400px;
+  margin: 0 auto;
 }
 .logo {
   position: relative;

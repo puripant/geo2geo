@@ -1,50 +1,42 @@
-//Width and height of map
-var width = 400;
-var height = 700;
+let width = 400;
+let height = 700;
 
-// D3 Projection
-var projection = d3.geoAlbers()
+let projection = d3.geoAlbers()
   .center([100.0, 13.5])
   .rotate([0, 24])
   .parallels([5, 21])
   .scale(1200 * 2)
   .translate([-100, 200]);
 
-// Define path generator
-var path = d3.geoPath() // path generator that will convert GeoJSON to SVG paths
-  .projection(projection); // tell path generator to use albersUsa projection
+let path = d3.geoPath().projection(projection);
 
-// Define linear scale for output
-var color = d3.scaleLinear()
+let color = d3.scaleLinear()
   .domain([0, 1])
   .range(["gainsboro", "#eb307c"]);
 
-//Create SVG element and append map to the SVG
-var svg = d3.select("#result")
+let svg = d3.select("#result")
   .append("svg")
   .attr("class", "map")
   .attr("width", width)
   .attr("height", height);
 
-// Append Div for tooltip to SVG
-var tooltip = d3.select("body")
+let tooltip = d3.select("body")
   .append("div")
     .attr("class", "tooltip")
     .style("opacity", 0);
 
 // Based on https://bl.ocks.org/mbostock/3081153
-var circle = function(coordinates) {
-  var circle = [];
-  var length = 0;
-  var lengths = [length];
-  var p0 = coordinates[0];
-  var p1;
-  var x;
-  var y;
-  var i = 0;
-  var n = coordinates.length;
+let circle = (coordinates) => {
+  let circle = [];
+  let length = 0;
+  let lengths = [length];
+  let p0 = coordinates[0];
+  let p1;
+  let x;
+  let y;
+  let i = 0;
+  let n = coordinates.length;
 
-  // Compute the distances of each coordinate.
   while (++i < n) {
     p1 = coordinates[i];
     x = p1[0] - p0[0];
@@ -53,15 +45,14 @@ var circle = function(coordinates) {
     p0 = p1;
   }
 
-  var area = d3.polygonArea(coordinates);
-  var radius = Math.sqrt(Math.abs(area) / Math.PI);
-  var centroid = d3.polygonCentroid(coordinates);
-  var angleOffset = Math.atan2(coordinates[0][1]-centroid[1], coordinates[0][0]-centroid[0]);
-  var angle;
-  var i = -1;
-  var k = 2 * Math.PI / lengths[lengths.length - 1];
+  let area = d3.polygonArea(coordinates);
+  let radius = Math.sqrt(Math.abs(area) / Math.PI);
+  let centroid = d3.polygonCentroid(coordinates);
+  let angleOffset = Math.atan2(coordinates[0][1]-centroid[1], coordinates[0][0]-centroid[0]);
+  let angle;
+  i = -1;
+  let k = 2 * Math.PI / lengths[lengths.length - 1];
 
-  // Compute points along the circle’s circumference at equivalent distances.
   while (++i < n) {
     angle = angleOffset + lengths[i] * k;
     circle.push([
@@ -74,8 +65,8 @@ var circle = function(coordinates) {
 }
 
 // adapted from d3 hexbin
-let hex = function(coordinates, [x0, y0], [dx, dy], radius) {
-  const num = coordinates.length;
+let hex = (coordinates, [x0, y0], [dx, dy], radius) => {
+  const num = 6; //coordinates.length;
   if (num >= 6) {
     const numPerSide = Math.floor(num / 6);
     const remainder = num - (numPerSide*6);
@@ -86,13 +77,12 @@ let hex = function(coordinates, [x0, y0], [dx, dy], radius) {
     x0 = (x0 - ((y0%2 === 0)? 0.5:0))*radius*Math.sqrt(3);
     y0 *= radius*3/2;
 
-    //find the closest angle to offset
     const centroid = d3.polygonCentroid(coordinates);
     const angleOffset = Math.atan2(coordinates[0][1]-centroid[1], coordinates[0][0]-centroid[0]);
-    const angles2 = angles.map(function(a) { return Math.abs((a - angleOffset) % (2*Math.PI)); });
+    const angles2 = angles.map((a) => Math.abs((a - angleOffset) % (2*Math.PI)));
     const indexOffset = angles2.indexOf(d3.min(angles2));
 
-    let corners = angles.map(function(angle) {
+    let corners = angles.map((angle) => {
         let x1 = Math.cos(angle) * radius;
         let y1 = Math.sin(angle) * radius;
         return [dx + x0 + x1, dy + y0 + y1];
@@ -208,22 +198,18 @@ const thaiHexMap = [
   { id: 96, y: 19, x: 4 },
 ];
 
-var geo;
-var geometryMode = 0;
-var updateMap = function() {
+let geo;
+let geometryMode = 0;
+let updateMap = () => {
   svg.selectAll("path")
-    .style("fill", function(d) {
-      var value = d.properties.visited;
-      return value ? color(value) : "gainsboro";
-    })
     .transition()
       .duration(2000)
-      .attr("d", function(d) {
-        var coords = d.geometry.coordinates[0];
+      .attrTween("d", (d) => {
+        let coords = d.geometry.coordinates[0];
         if (coords.length == 1) { //find the biggest part in each province
-          var max_length = -1;
-          var max_i = -1;
-          for (var i = 0; i < d.geometry.coordinates.length; i++) {
+          let max_length = -1;
+          let max_i = -1;
+          for (let i = 0; i < d.geometry.coordinates.length; i++) {
             if (max_length < d.geometry.coordinates[i][0].length) {
               max_length = d.geometry.coordinates[i][0].length;
               max_i = i;
@@ -231,45 +217,47 @@ var updateMap = function() {
           }
           coords = d.geometry.coordinates[max_i][0];
         }
-        let circleCoords = circle(coords.map(function(coord) { return projection(coord); }));
-        let hexCenter = thaiHexMap.find(function(h) { return h.id === +d.properties.ISO; });
-        let hexCoords = hex(coords.map(function(coord) { return projection(coord); }), [hexCenter.x, hexCenter.y], [80, 50], 20);
+
+        let geo_path = flubber.splitPathString(path(d)).reduce((a, b) => a.length > b.length ? a : b); //find the biggest ring in each path
+
+        let circleCoords = circle(coords.map((coord) => projection(coord)));
+        let circle_path = "M" + circleCoords.join("L") + "Z";
+
+        let hexCenter = thaiHexMap.find((h) => h.id === +d.properties.ISO);
+        let hexCoords = hex(coords.map((coord) => projection(coord)), [hexCenter.x, hexCenter.y], [80, 50], 20);
+        let hex_path = "M" + hexCoords.join("L") + "Z";
+
         switch(geometryMode % 3) {
-          case 0: default: return path(d);
-          case 1: return "M" + circleCoords.join("L") + "Z";
-          case 2: return "M" + hexCoords.join("L") + "Z";
+          case 0: default: return flubber.interpolate(hex_path, geo_path);
+          case 1: return flubber.interpolate(geo_path, circle_path);
+          case 2: return flubber.interpolate(circle_path, hex_path);
         }
-      });
+      })
   geometryMode++;
 }
 
-var provinces;
-var findProvinceTH = function(province) {
-  // Find the corresponding province inside the GeoJSON
-  for (var i = 0; i < provinces.length; i++)  {
+let provinces;
+let findProvinceTH = (province) => {
+  for (let i = 0; i < provinces.length; i++)  {
     if (province === provinces[i].province) {
       return provinces[i].provinceTH;
     }
   }
 }
 
-d3.csv("data/provinces-visited.csv", function(data) {
+d3.csv("data/provinces-visited.csv", (data) => {
   provinces = data;
 
-  // Load GeoJSON data and merge with states data
-  d3.json("data/thailand-topo.json", function(json) {
+  d3.json("data/thailand-topo.json", (json) => {
     geo = topojson.feature(json, json.objects.thailand).features;
-    // console.log(topojson.neighbors(json.objects.thailand.geometries));
 
-    biggest_parts = geo.map(function(g) {
+    biggest_parts = geo.map((g) => {
       if (g.geometry.coordinates.length > 1) {
         g.geometry.coordinates.sort((a, b) => { d3.polygonArea(b[0]) - d3.polygonArea(a[0]) });
       }
       return (g.geometry.coordinates[0].length === 1)? g.geometry.coordinates[0][0] : g.geometry.coordinates[0];
     });
-    // console.log(biggest_parts);
 
-    // Bind the data to the SVG and create one path per GeoJSON feature
     svg.selectAll("path")
         .data(geo)
       .enter()
@@ -277,22 +265,22 @@ d3.csv("data/provinces-visited.csv", function(data) {
       	.attr("d", path)
       	.style("stroke", "#fff")
       	.style("stroke-width", "1")
-        .on("mouseover", function(d) {
-            tooltip.transition()
-              .duration(200)
-              .style("opacity", 0.8);
-            tooltip.html(findProvinceTH(d.properties.NAME_1))
-              .style("left", (d3.event.pageX) + "px")
-              .style("top", (d3.event.pageY - 30) + "px");
-          })
-        .on("mouseout", function(d) {
-            tooltip.transition()
-              .duration(500)
-              .style("opacity", 0);
-          })
-    svg.on("click", function(d) {
-        updateMap();
-      });
+        .on("mouseover", (d) => {
+          tooltip.transition()
+            .duration(200)
+            .style("opacity", 0.8);
+          tooltip.html(findProvinceTH(d.properties.NAME_1))
+            .style("left", (d3.event.pageX) + "px")
+            .style("top", (d3.event.pageY - 30) + "px");
+        })
+        .on("mouseout", (d) => {
+          tooltip.transition()
+            .duration(500)
+            .style("opacity", 0);
+        })
+    svg.on("click", (d) => {
+      updateMap();
+    });
     updateMap();
   });
 
