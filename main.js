@@ -245,10 +245,10 @@ let findProvinceTH = (province) => {
   }
 }
 
-d3.csv("data/provinces-visited.csv", (data) => {
+d3.csv("data/provinces-visited.csv").then((data) => {
   provinces = data;
 
-  d3.json("data/thailand-topo.json", (json) => {
+  d3.json("data/thailand-topo.json").then((json) => {
     geo = topojson.feature(json, json.objects.thailand).features;
 
     biggest_parts = geo.map((g) => {
@@ -265,20 +265,20 @@ d3.csv("data/provinces-visited.csv", (data) => {
       	.attr("d", path)
       	.style("stroke", "#fff")
       	.style("stroke-width", "1")
-        .on("mouseover", (d) => {
+        .on("mouseover", (event, d) => {
           tooltip.transition()
             .duration(200)
             .style("opacity", 0.8);
           tooltip.html(findProvinceTH(d.properties.NAME_1))
-            .style("left", (d3.event.pageX) + "px")
-            .style("top", (d3.event.pageY - 30) + "px");
+            .style("left", (event.pageX) + "px")
+            .style("top", (event.pageY - 30) + "px");
         })
-        .on("mouseout", (d) => {
+        .on("mouseout", () => {
           tooltip.transition()
             .duration(500)
             .style("opacity", 0);
         })
-    svg.on("click", (d) => {
+    svg.on("click", () => {
       updateMap();
     });
     updateMap();
